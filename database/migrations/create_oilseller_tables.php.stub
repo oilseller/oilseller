@@ -1,0 +1,77 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateOilSellerTables extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        $builder = $this->builder();
+        $tableNames = config('oilseller.tables');
+
+        $builder->create($tableNames['oils'], function (Blueprint $table) {
+            $table->bigIncrements('id')->comment('primary key');
+            $table->bigInteger('app_id')->comment('oil_apps id');
+            $table->string('key')->comment('business key for call, unique');
+            $table->string('name')->comment('name for show');
+            $table->text('description')->comment('description');
+            $table->longText('content')->comment('content detail');
+            $table->Integer('version')->comment('data version');
+            $table->timestamps();
+            $table->softDeletes();
+
+            $table->unique(['app_id', 'key'], 'index_app_id_and_key');
+        });
+
+        $builder->create($tableNames['oil_apps'], function (Blueprint $table) {
+            $table->bigIncrements('id')->comment('primary key');
+            $table->string('name')->comment('name for show');
+            $table->string('app_token')->comment('token for auth');
+            $table->text('description')->comment('description');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        $builder->create($tableNames['oil_access_logs'], function (Blueprint $table) {
+            $table->bigIncrements('id')->comment('primary key');
+            $table->bigInteger('app_id')->comment('oil_apps id');
+            $table->string('key')->comment('business key for call');
+            $table->integer('count')->comment('the key-oil config call count in your code');
+            $table->boolean('ret')->comment('1-hit 0-miss');
+            $table->datetime('time')->comment('record time for statistics');
+
+            $table->index('time', 'index_time');
+        });
+    }
+
+
+    public function down()
+    {
+        $builder = $this->builder();
+        $tableNames = config('oilseller.tables');
+
+        foreach ($tableNames as $name => $value) {
+            $builder->drop($name);
+        }
+    }
+
+    protected function builder()
+    {
+        $connection = config('oilseller.connection');
+
+        if (!$connection) {
+            $builder = app('db')->connection($connection)->getSchemaBuilder();
+        } else {
+            $builder = app('db')->connection()->getSchemaBuilder();
+        }
+
+        return $builder;
+    }
+}
