@@ -1,20 +1,17 @@
 <?php
 
-namespace OilSeller\Oil;
+namespace OilSeller\Model;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Oil extends Model
+class OilAccessLog extends Model
 {
-    use SoftDeletes;
-
     protected $guarded = ['id'];
 
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
 
-        $this->setTable(config('oilseller.tables.oils'));
+        $this->setTable(config('oilseller.tables.oil_access_logs'));
     }
 }

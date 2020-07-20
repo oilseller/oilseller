@@ -3,6 +3,8 @@
 namespace OilSeller\Tests;
 
 use Illuminate\Support\Facades\File;
+use Livewire\LivewireServiceProvider;
+use OilSeller\Model\OilApp;
 use OilSeller\OilSellerServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
@@ -26,12 +28,16 @@ class TestCase extends BaseTestCase
         include_once __DIR__.'/../database/migrations/create_oilseller_tables.php.stub';
 
         (new \CreateOilSellerTables())->up();
+
+        OilApp::create(['name' => 'app1', 'app_token' => 'token1', 'description' => '']);
+        OilApp::create(['name' => 'app2', 'app_token' => 'token2', 'description' => '']);
     }
 
     protected function getPackageProviders($app)
     {
         return [
             OilSellerServiceProvider::class,
+            LivewireServiceProvider::class,
         ];
     }
 

@@ -1,12 +1,13 @@
 <?php
 
-namespace OilSeller\Oil;
+namespace OilSeller\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class OilAccessLog extends Model
+class Oil extends Model
 {
-    public $timestamps = false;
+    use SoftDeletes;
 
     protected $guarded = ['id'];
 
@@ -14,6 +15,6 @@ class OilAccessLog extends Model
     {
         parent::__construct($attributes);
 
-        $this->setTable(config('oilseller.tables.oil_access_logs'));
+        $this->setTable(config('oilseller.tables.oils'));
     }
 }

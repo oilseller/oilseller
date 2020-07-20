@@ -6,19 +6,16 @@ use OilSeller\Oil\Oil;
 
 class OilRepository
 {
-    protected $appID;
-
-    public function __construct($appID)
+    public function __construct()
     {
-        $this->appID = $appID;
         $this->model = New Oil;
     }
 
-    public function getContent(string $key): string
+    public function getContent($appID, $key): string
     {
         $ins = $this->model
             ->newQuery()
-            ->where('app_id', $this->appID)
+            ->where('app_id', $appID)
             ->where('key', $key)
             ->firstOrFail(['content']);
         return $ins->content;
